@@ -19,8 +19,7 @@ public class Snake extends JFrame implements KeyListener {
     private int dy;
     private Random generator = new Random();
     private Point food;
-    private int points;
-   
+    private int points;   
    
     public static void main(String[] args) {
         new Snake();
@@ -162,30 +161,30 @@ public class Snake extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-       
+        int key = e.getKeyCode();      
+        
         if(key == 37) {
-            dx = -1;
+            if (dx != 1) dx = -1;
             dy = 0;
         } else if(key == 38) {
             dx = 0;
-            dy = -1;
+            if (dx != 1) dy = -1;
         } else if(key == 39) {
-            dx = 1;
+        	if (dx != -1) dx = 1;
             dy = 0;
         } else if(key == 40) {
             dx = 0;
-            dy = 1;
+            if (dy != -1) dy = 1;
         }
     }
    
     @Override
     public void keyReleased(KeyEvent e) {
-        // not needed
+        //do nothing
     }
    
     @Override
     public void keyTyped(KeyEvent e) {
-        // not needed
+        //do nothing
     }
 }
