@@ -56,7 +56,7 @@ public class MenuState extends GameState {
 				g.setColor(Color.BLUE);
 			}
 			
-			g.drawString(options[i], (GamePanel.width/2)-options[i].length(), (GamePanel.hight/3) + i*32);
+			g.drawString(options[i], (GamePanel.width/2)-options[i].length(), (GamePanel.hight/2) + i*33);
 		}
 		
 	}
