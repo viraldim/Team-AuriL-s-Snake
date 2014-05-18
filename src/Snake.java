@@ -43,7 +43,7 @@ public class Snake extends JFrame implements KeyListener {
             gameLoop();
             while (System.currentTimeMillis() - start < 65 - points) {
                  //waiting
-            	 //the more point you have, the faster the snake
+            	 //the more points you have, the faster the snake
             }
         }
     }   
@@ -85,13 +85,13 @@ public class Snake extends JFrame implements KeyListener {
         	snake.getFirst().x = windowWidth / 10;
         }
         else if (snake.getFirst().x >= windowWidth / 10) {
-        	snake.getFirst().x = 1;
+        	snake.getFirst().x = 0;
         }
         else if (snake.getFirst().y < 2) {
         	snake.getFirst().y = windowHeight / 10;
         }
         else if (snake.getFirst().y >= windowHeight / 10) {
-        	snake.getFirst().y = 3;
+        	snake.getFirst().y = 2;
         }
        
         // check if the snake has hit itself
@@ -133,7 +133,7 @@ public class Snake extends JFrame implements KeyListener {
         for(int n = 0; n < snake.size(); n++) {
             g.setColor(Color.GREEN);
             Point p = snake.get(n);
-            g.fillOval(p.x*10, p.y*10, 10, 10);
+            g.fillRect(p.x*10, p.y*10, 10, 10);
         }
     }
    
@@ -152,13 +152,13 @@ public class Snake extends JFrame implements KeyListener {
     }
    
     private void generateFood() {
-        food.x = generator.nextInt(windowWidth / 10 - 10);
-        food.y = generator.nextInt(windowHeight / 10 - 10);
+        food.x = 8 + generator.nextInt(windowWidth / 10 - 8);
+        food.y = 8 + generator.nextInt(windowHeight / 10 - 8);
     }
    
     private void drawFood(Graphics g) {
         g.setColor(Color.RED);
-        g.fillOval(food.x*10, food.y*10, 10, 10);
+        g.fillRect(food.x*10, food.y*10, 10, 10);
     }
     private void generateObstacle() {
     	obstacles.add(new Point(generator.nextInt(windowWidth / 10 - 4), generator.nextInt(windowHeight / 10 - 4)));
@@ -166,7 +166,7 @@ public class Snake extends JFrame implements KeyListener {
     private void drawObstacles(Graphics g) {
     	for (Point p : obstacles) {
         g.setColor(Color.WHITE);
-        g.fillOval(p.x*10, p.y*10, 10, 10);
+        g.fillRect(p.x*10, p.y*10, 10, 10);
     	}
     }
     private void drawPoints(Graphics g) {
@@ -180,18 +180,17 @@ public class Snake extends JFrame implements KeyListener {
         if (key == 37) {
 	         dy = 0;
 	         if (dx != 1) dx = -1;
-        } else if(key == 38) {
+        } else if (key == 38) {
 	         dx = 0;
 	         if (dy != 1) dy = -1;
-        } else if(key == 39) {
+        } else if (key == 39) {
 	         dy = 0;
 	         if (dx != -1) dx = 1;
-        } else if(key == 40) {
+        } else if (key == 40) {
 	         dx = 0;
 	         if (dy != -1) dy = 1;
         }
-    }
-   
+    }   
     @Override
     public void keyReleased(KeyEvent e) {}   
     @Override
