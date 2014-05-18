@@ -123,7 +123,7 @@ public class Snake extends JFrame implements KeyListener {
             g.dispose();
         }
        
-        // Showing the contents of the backbuffer
+        // Showing the contents of the buffer
         buffer.show();        
         Toolkit.getDefaultToolkit().sync();
     }
@@ -160,7 +160,7 @@ public class Snake extends JFrame implements KeyListener {
     }
     private void generateObstacles(int count) {
     	for (int i = 0; i < count; i++) {
-    		obstacles.add(new Point(4 + generator.nextInt(windowWidth / 10 - 4), generator.nextInt(4 + windowHeight / 10 - 4)));
+    		obstacles.add(new Point(4 + generator.nextInt(windowWidth / 10 - 4), 4 + generator.nextInt(windowHeight / 10 - 4)));
     	}
     }
     private void drawObstacles(Graphics g) {
