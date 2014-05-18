@@ -53,7 +53,6 @@ public class Snake extends JFrame implements KeyListener {
         growSnake(7);
        
         obstacles = new ArrayList<Point>();
-        obstacles.add(new Point(20, 20));
         
         food = new Point(40, 50);
         
@@ -65,10 +64,10 @@ public class Snake extends JFrame implements KeyListener {
         // move the snake
         moveSnake(dx, dy);
        
-        // check if our snake has eaten his food :)
+        // food check
         if(snake.getFirst().equals(food)) {
         	generateFood();
-        	generateObstacle();
+        	generateObstacles(2);
             growSnake(1);
             points++;
         }
@@ -105,11 +104,11 @@ public class Snake extends JFrame implements KeyListener {
     }    
    
     private void drawFrame() {
-        BufferStrategy bf = this.getBufferStrategy();
+        BufferStrategy buffer = this.getBufferStrategy();
         Graphics g = null;
        
         try {
-            g = bf.getDrawGraphics();
+            g = buffer.getDrawGraphics();
            
             // cleaning the buffer
             g.setColor(Color.BLACK);
@@ -117,22 +116,21 @@ public class Snake extends JFrame implements KeyListener {
             
             // drawing
             drawSnake(g);
+            drawObstacles(g);
             drawFood(g);
             drawPoints(g);
-            drawObstacles(g);
         } finally {
             g.dispose();
         }
        
         // Showing the contents of the backbuffer
-        bf.show();        
+        buffer.show();        
         Toolkit.getDefaultToolkit().sync();
     }
    
     private void drawSnake (Graphics g) {
-        for(int n = 0; n < snake.size(); n++) {
-            g.setColor(Color.GREEN);
-            Point p = snake.get(n);
+    	g.setColor(Color.GREEN);
+        for (Point p : snake) {
             g.fillRect(p.x*10, p.y*10, 10, 10);
         }
     }
@@ -145,8 +143,8 @@ public class Snake extends JFrame implements KeyListener {
         snake.getFirst().y += dy;
     }
    
-    private void growSnake (int n) {
-        for (int i = n; i > 0; i--) {
+    private void growSnake (int count) {
+        for (int i = 0; i < count; i++) {
             snake.add(new Point(snake.getLast()));
         }
     }
@@ -160,12 +158,14 @@ public class Snake extends JFrame implements KeyListener {
         g.setColor(Color.RED);
         g.fillRect(food.x*10, food.y*10, 10, 10);
     }
-    private void generateObstacle() {
-    	obstacles.add(new Point(generator.nextInt(windowWidth / 10 - 4), generator.nextInt(windowHeight / 10 - 4)));
+    private void generateObstacles(int count) {
+    	for (int i = 0; i < count; i++) {
+    		obstacles.add(new Point(4 + generator.nextInt(windowWidth / 10 - 4), generator.nextInt(4 + windowHeight / 10 - 4)));
+    	}
     }
     private void drawObstacles(Graphics g) {
-    	for (Point p : obstacles) {
-        g.setColor(Color.WHITE);
+    	g.setColor(Color.WHITE);
+    	for (Point p : obstacles) {       
         g.fillRect(p.x*10, p.y*10, 10, 10);
     	}
     }
