@@ -157,19 +157,19 @@ public class Snake extends JFrame implements KeyListener {
    
     private void drawSnake (Graphics g) {
 		try {
-			Image skin = ImageIO.read(new File("Resources\\SnakeSkin.jpg"));
-			Image head = ImageIO.read(new File("Resources\\SnakeHead.png"));
+			Image skin = ImageIO.read(getClass().getResource("/SnakeSkin.jpg"));
+			Image head = ImageIO.read(getClass().getResource("/SnakeHead.png"));
 			g.drawImage(head, snake.get(0).x*10, snake.get(0).y*10, 10, 10, null);
 	        for (int i = 1; i < snake.size(); i++) {            	        	
 	            g.drawImage(skin, snake.get(i).x*10, snake.get(i).y*10, 10, 10, null);       
 	        }
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
-//    	g.setColor(Color.GREEN);
-//        for (Point p : snake) {
-//            g.fillRect(p.x*10, p.y*10, 10, 10);
-//        }
+		}	
+    	/*g.setColor(Color.GREEN);
+        for (Point p : snake) {
+           g.fillRect(p.x*10, p.y*10, 10, 10);
+        }*/
     }
    
     private void moveSnake(int dx, int dy) {
