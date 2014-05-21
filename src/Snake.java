@@ -19,7 +19,7 @@ public class Snake extends JFrame implements KeyListener {
     private Point food;
     private int dx;
     private int dy;
-    private boolean snakeIsAlive;
+    private boolean snakeIsAlive = true;
     private int points;
     private int level;
     private Random randomGenerator = new Random();
@@ -41,7 +41,7 @@ public class Snake extends JFrame implements KeyListener {
         this.setVisible(true);
         this.createBufferStrategy(2);   
         this.addKeyListener(this);
-        snakeIsAlive = true;
+        //snakeIsAlive = true;
         
         startSnakePosition = new Point (20 + randomGenerator.nextInt(windowWidth / 10 - 20),
 				   						20 + randomGenerator.nextInt(windowHeight / 10 - 20));
