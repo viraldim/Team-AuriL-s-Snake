@@ -25,7 +25,8 @@ public class Snake extends JFrame implements KeyListener {
     private Random randomGenerator = new Random();
     private Point startSnakePosition;												
     private Point startFoodPosition;
-   
+    private boolean inMenu = true;
+    
     public static void main(String[] args) {    	
     	new Snake();
     } 
@@ -133,17 +134,25 @@ public class Snake extends JFrame implements KeyListener {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, windowWidth, windowHeight);
             
+           if(inMenu == false) {
             // drawing
-            if (snakeIsAlive) {
-            	drawObstacles(g);
-            	drawFood(g);
-                drawSnake(g);                    
-                drawScore(g);
-            }            
-            else {
-            	gameOver(g);
-            }
-            
+				if (snakeIsAlive) {
+					drawObstacles(g);
+					drawFood(g);
+				    drawSnake(g);                    
+				    drawScore(g);
+				}            
+				else {
+					gameOver(g);
+				}
+           }
+           else{
+        	  g.setColor(Color.red);
+        	  g.setFont(new Font("Tahoma", Font.PLAIN,15));
+        	  String enter = "Press enter to start the game";
+        	  g.drawString(enter, (windowWidth/3)-(enter.length()/2),windowHeight/2 );
+        	  
+           }
         } finally {
             g.dispose();
         }
@@ -253,7 +262,11 @@ public class Snake extends JFrame implements KeyListener {
         } else if (key == 40) {
 	         dx = 0;
 	         if (dy != -1) dy = 1;
-        }       
+        }
+        else if(key== KeyEvent.VK_ENTER){
+        	
+        	inMenu = false;
+        }
     }   
     @Override
     public void keyReleased(KeyEvent e) {}   
