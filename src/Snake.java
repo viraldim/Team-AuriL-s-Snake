@@ -44,17 +44,19 @@ public class Snake extends JFrame implements KeyListener {
         this.setVisible(true);
         this.createBufferStrategy(2);   
         this.addKeyListener(this);
+        snakeIsAlive = true;
         
         startSnakePosition = new Point (20 + randomGenerator.nextInt(windowWidth / 10 - 20),
 				   						20 + randomGenerator.nextInt(windowHeight / 10 - 20));
         startFoodPosition = new Point (15 + randomGenerator.nextInt(windowWidth / 10 - 15),
         							   15 + randomGenerator.nextInt(windowHeight / 10 - 15));
+        
         initGame();
-       
+        
         while(true) {
             long start = System.currentTimeMillis();
             gameLoop();
-            while (System.currentTimeMillis() - start < 70 - level * 5) {
+            while (System.currentTimeMillis() - start < 75 - level * 5) {
                  //waiting
             	 //the higher the level, the faster the snake
             }
@@ -63,7 +65,7 @@ public class Snake extends JFrame implements KeyListener {
     private void initGame() {
         snake = new ArrayList<Point>();
         snake.add(startSnakePosition);
-        growSnake(7);
+        growSnake(2);
        
         obstacles = new ArrayList<Point>();
         
@@ -73,8 +75,7 @@ public class Snake extends JFrame implements KeyListener {
         dy = 0;
         points = 0;
         level = 1;
-        snakeIsAlive = true;
-        }   
+        }
     private void gameLoop() {       
         // move the snake
         moveSnake(dx, dy);
@@ -83,7 +84,7 @@ public class Snake extends JFrame implements KeyListener {
         if(snake.get(0).equals(food)) {
         	generateFood();
         	generateObstacles(2);
-            growSnake(1);
+            growSnake(2);
             points++;
             if (points % 5 == 0) {
             	level++;
@@ -93,8 +94,8 @@ public class Snake extends JFrame implements KeyListener {
         // obstacle check
         for (Point p : obstacles) {
 			if(snake.get(0).equals(p)) {
-				//snakeIsAlive = false;
-				//initGame();
+				snakeIsAlive = false;
+				initGame();
 			}
 		}
         
@@ -102,7 +103,7 @@ public class Snake extends JFrame implements KeyListener {
         for(int n = 3; n < snake.size(); n++) {
             if(snake.get(0).equals(snake.get(n))) {
             	snakeIsAlive = false;
-                //initGame();
+                initGame();
             }
         }       
         
@@ -135,12 +136,13 @@ public class Snake extends JFrame implements KeyListener {
             g.fillRect(0, 0, windowWidth, windowHeight);
             
             // drawing
-            drawObstacles(g);
-            drawFood(g);
-            drawSnake(g);                    
-            drawScore(g);
-            
-            if (!snakeIsAlive) {
+            if (snakeIsAlive) {
+            	drawObstacles(g);
+            	drawFood(g);
+                drawSnake(g);                    
+                drawScore(g);
+            }            
+            else {
             	gameOver(g);
             }
             
@@ -171,7 +173,7 @@ public class Snake extends JFrame implements KeyListener {
     }
    
     private void moveSnake(int dx, int dy) {
-        for (int n = snake.size() - 1; n >= 1; n--) {
+        for (int n = snake.size() - 1; n > 0; n--) {
             snake.get(n).setLocation(snake.get(n-1));
         }
         snake.get(0).x += dx;
@@ -180,9 +182,7 @@ public class Snake extends JFrame implements KeyListener {
    
     private void growSnake (int count) {
         for (int i = 0; i < count; i++) {
-        	int x = snake.get(snake.size() - 1).x;
-        	int y = snake.get(snake.size() - 1).y - 1;
-            snake.add(new Point(x, y));
+        	snake.add(new Point(snake.get(snake.size() - 1)));
         }
     }
    
@@ -204,7 +204,7 @@ public class Snake extends JFrame implements KeyListener {
     private void drawObstacles(Graphics g) {
     	g.setColor(Color.WHITE);
     	for (Point p : obstacles) {       
-        g.fillRect(p.x*10, p.y*10, 10, 10);
+    		g.fillRect(p.x*10, p.y*10, 10, 10);
     	}
     }
     private void drawScore (Graphics g) {
@@ -235,6 +235,9 @@ public class Snake extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         
+        if (key != 0){
+        	snakeIsAlive = true;
+        }
         if (key == 37) {
 	         dy = 0;
 	         if (dx != 1) dx = -1;
@@ -247,7 +250,7 @@ public class Snake extends JFrame implements KeyListener {
         } else if (key == 40) {
 	         dx = 0;
 	         if (dy != -1) dy = 1;
-        }
+        }       
     }   
     @Override
     public void keyReleased(KeyEvent e) {}   
