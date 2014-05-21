@@ -1,14 +1,7 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
+
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,7 +10,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
  
 public class Snake extends JFrame implements KeyListener {
-   
+	
+    //
     private int windowWidth = 800;
     private int windowHeight = 600;
     private ArrayList<Point> snake;
@@ -34,7 +28,9 @@ public class Snake extends JFrame implements KeyListener {
    
     public static void main(String[] args) {    	
     	new Snake();
-    }   
+    } 
+    
+    //handles the main window of the game and sets the start
     public Snake() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(windowWidth, windowHeight);
@@ -76,11 +72,13 @@ public class Snake extends JFrame implements KeyListener {
         points = 0;
         level = 1;
         }
+    
+    //main loop in thegame handles movment and new object placement
     private void gameLoop() {       
         // move the snake
         moveSnake(dx, dy);
        
-        // food check
+        // checks conditions
         if(snake.get(0).equals(food)) {
         	generateFood();
         	generateObstacles(2);
@@ -207,11 +205,13 @@ public class Snake extends JFrame implements KeyListener {
     		g.fillRect(p.x*10, p.y*10, 10, 10);
     	}
     }
+    
     private void drawScore (Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
         g.drawString("Total score: " + points, 718, 40);
         g.drawString("Level: " + level, 720, 52);
     }
+    
     private void gameOver(Graphics g) {
         String gmOver = "GAME OVER!";
         String score = "Score: " + points;
@@ -224,13 +224,16 @@ public class Snake extends JFrame implements KeyListener {
         g.setFont(new Font("Tahoma", Font.PLAIN, scoreFontSize)); 
         g.drawString(score, centralTxt(score, scoreFontSize, g), 300);
         g.drawString(next, centralTxt(next, scoreFontSize, g), 400);  	
-    }       
+    }   
+    
     private int centralTxt (String txt, int txtSize, Graphics g) {
     	FontMetrics fm = g.getFontMetrics();
     	int strWidth = fm.stringWidth(txt);
     	int middle = (windowWidth / 2) - (strWidth / 2);
     	return middle;
     }
+    
+    
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -256,4 +259,6 @@ public class Snake extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {}   
     @Override
     public void keyTyped(KeyEvent e) {}
+    
+    
 }
