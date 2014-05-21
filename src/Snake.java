@@ -1,9 +1,9 @@
 import java.awt.*;
-
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -16,16 +16,14 @@ public class Snake extends JFrame implements KeyListener {
     private int windowHeight = 600;
     private ArrayList<Point> snake;
     private ArrayList<Point> obstacles;
+    private Point snakePosition;	
     private Point food;
     private int dx;
     private int dy;
     private boolean snakeIsAlive = true;
-    private int points;
-    private int level;
-    private Random randomGenerator = new Random();
-    private Point startSnakePosition;												
-    private Point startFoodPosition;
     private boolean inMenu = true;
+    private int points;
+    private Random randomGenerator = new Random();
     
     public static void main(String[] args) {    	
     	new Snake();
@@ -43,51 +41,48 @@ public class Snake extends JFrame implements KeyListener {
         this.addKeyListener(this);
         //snakeIsAlive = true;
         
-        startSnakePosition = new Point (20 + randomGenerator.nextInt(windowWidth / 10 - 20),
-				   						20 + randomGenerator.nextInt(windowHeight / 10 - 20));
-        startFoodPosition = new Point (15 + randomGenerator.nextInt(windowWidth / 10 - 15),
-        							   15 + randomGenerator.nextInt(windowHeight / 10 - 15));
+        snakePosition = randomPoint(15);
+        food = randomPoint(15);
         
         initGame();
         
-        while(true) {
+        while (true) {
             long start = System.currentTimeMillis();
             gameLoop();
-            while (System.currentTimeMillis() - start < 75 - level * 5) {
+            while (System.currentTimeMillis() - start < 70 - points) {
                  //waiting
             	 //the higher the level, the faster the snake
             }
         }
-    }   
+    }
+    private Point randomPoint (int deviation) {
+    	int randomX = deviation + randomGenerator.nextInt(windowWidth / 10 - 2 * deviation);
+    	int randomY = deviation + randomGenerator.nextInt(windowHeight / 10 - 2 * deviation);
+    	return new Point (randomX, randomY);
+    }
     private void initGame() {
         snake = new ArrayList<Point>();
-        snake.add(startSnakePosition);
+        snake.add(snakePosition);
         growSnake(2);
        
         obstacles = new ArrayList<Point>();
         
-        food = startFoodPosition;
-        
         dx = 0;
         dy = 0;
-        points = 0;
-        level = 1;
+        //points = 0;
         }
     
-    //main loop in thegame handles movment and new object placement
+    //main loop in the game - handles movement and new object placement
     private void gameLoop() {       
         // move the snake
         moveSnake(dx, dy);
        
-        // checks conditions
+        // food check
         if(snake.get(0).equals(food)) {
         	generateFood();
         	generateObstacles(2);
             growSnake(2);
             points++;
-            if (points % 5 == 0) {
-            	level++;
-            }
         }
         
         // obstacle check
@@ -99,7 +94,7 @@ public class Snake extends JFrame implements KeyListener {
 		}
         
         // check if the snake has hit itself
-        for(int n = 3; n < snake.size(); n++) {
+        for (int n = 3; n < snake.size(); n++) {
             if(snake.get(0).equals(snake.get(n))) {
             	snakeIsAlive = false;
                 initGame();
@@ -134,9 +129,15 @@ public class Snake extends JFrame implements KeyListener {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, windowWidth, windowHeight);
             
-           if(inMenu == false) {
-            // drawing
-				if (snakeIsAlive) {
+            // drawing	
+            if (inMenu) {			
+				g.setColor(Color.red);
+	        	g.setFont(new Font("Tahoma", Font.PLAIN,15));
+	        	String enter = "Press enter to start the game";
+	        	g.drawString(enter, (windowWidth/3)-(enter.length()/2),windowHeight/2 );
+            }
+            else {
+        	   if (snakeIsAlive) {
 					drawObstacles(g);
 					drawFood(g);
 				    drawSnake(g);                    
@@ -144,15 +145,8 @@ public class Snake extends JFrame implements KeyListener {
 				}            
 				else {
 					gameOver(g);
-				}
-           }
-           else{
-        	  g.setColor(Color.red);
-        	  g.setFont(new Font("Tahoma", Font.PLAIN,15));
-        	  String enter = "Press enter to start the game";
-        	  g.drawString(enter, (windowWidth/3)-(enter.length()/2),windowHeight/2 );
-        	  
-           }
+				}        	  
+            }
         } finally {
             g.dispose();
         }
@@ -194,18 +188,22 @@ public class Snake extends JFrame implements KeyListener {
     }
    
     private void generateFood() {
-    	food = new Point(8 + randomGenerator.nextInt(windowWidth / 10 - 8),
-						8 + randomGenerator.nextInt(windowHeight / 10 - 8));
+    	food = randomPoint(8);
     }
    
     private void drawFood(Graphics g) {
-        g.setColor(Color.RED);
-        g.fillRect(food.x*10, food.y*10, 10, 10);
+    	try {
+			Image meal = ImageIO.read(getClass().getResource("/Strawberry.png"));
+			g.drawImage(meal, food.x*10, food.y*10, 10, 10, null);	        
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+        /*g.setColor(Color.RED);
+        g.fillRect(food.x*10, food.y*10, 10, 10);*/
     }
-    private void generateObstacles(int count) {
+    private void generateObstacles (int count) {
     	for (int i = 0; i < count; i++) {
-    		obstacles.add(new Point(4 + randomGenerator.nextInt(windowWidth / 10 - 4),
-    								4 + randomGenerator.nextInt(windowHeight / 10 - 4)));
+    		obstacles.add(randomPoint(4));
     	}
     }
     private void drawObstacles(Graphics g) {
@@ -217,8 +215,7 @@ public class Snake extends JFrame implements KeyListener {
     
     private void drawScore (Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
-        g.drawString("Total score: " + points, 718, 40);
-        g.drawString("Level: " + level, 720, 52);
+        g.drawString("Total score: " + points, 713, 40);
     }
     
     private void gameOver(Graphics g) {
@@ -232,7 +229,8 @@ public class Snake extends JFrame implements KeyListener {
         g.drawString(gmOver, centralTxt(gmOver, gmOverFontSize, g), 250);
         g.setFont(new Font("Tahoma", Font.PLAIN, scoreFontSize)); 
         g.drawString(score, centralTxt(score, scoreFontSize, g), 300);
-        g.drawString(next, centralTxt(next, scoreFontSize, g), 400);  	
+        g.drawString(next, centralTxt(next, scoreFontSize, g), 400);
+        //points = 0;
     }   
     
     private int centralTxt (String txt, int txtSize, Graphics g) {
@@ -262,16 +260,12 @@ public class Snake extends JFrame implements KeyListener {
         } else if (key == 40) {
 	         dx = 0;
 	         if (dy != -1) dy = 1;
-        }
-        else if(key== KeyEvent.VK_ENTER){
-        	
+        } else if (key == KeyEvent.VK_ENTER) {        	
         	inMenu = false;
         }
     }   
     @Override
     public void keyReleased(KeyEvent e) {}   
     @Override
-    public void keyTyped(KeyEvent e) {}
-    
-    
+    public void keyTyped(KeyEvent e) {}  
 }
