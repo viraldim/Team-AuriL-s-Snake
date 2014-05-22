@@ -225,7 +225,8 @@ public class Snake extends JFrame implements KeyListener {
         g.drawString(gmOver, centralTxt(gmOver, gmOverFontSize, g), 250);
         g.setFont(new Font("Tahoma", Font.PLAIN, scoreFontSize)); 
         g.drawString(score, centralTxt(score, scoreFontSize, g), 300);
-        g.drawString(next, centralTxt(next, scoreFontSize, g), 400);
+        
+        g.drawString(next, centralTxt(next, scoreFontSize, g), 360);
     }   
     
     private int centralTxt (String txt, int txtSize, Graphics g) {
@@ -237,14 +238,14 @@ public class Snake extends JFrame implements KeyListener {
     
     private void drawMenu(Graphics g) {
     	g.setColor(Color.red);
-    	int menuFontSize = 30;
-    	String enter = "Press [enter] to Start the Game";
+    	int menuFontSize = 50;
+    	String enter = "Press [enter] to start the game";
     	String game = "Ultimate Snake Game";
     	String team = "By Team Auril";
-    	g.setFont(new Font("Tahoma", Font.PLAIN, 30));
-    	g.drawString(game, centralTxt(game, menuFontSize, g), 250);
+    	g.setFont(new Font("Tahoma", Font.PLAIN, menuFontSize));
+    	g.drawString(game, centralTxt(game, menuFontSize, g), 200);
     	g.drawString(team, centralTxt(team, menuFontSize, g), 300);
-    	g.drawString(enter, centralTxt(enter, menuFontSize, g), 350);
+    	g.drawString(enter, centralTxt(enter, menuFontSize, g), 400);
     }
     
     @Override
