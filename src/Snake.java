@@ -3,7 +3,6 @@ import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -11,7 +10,6 @@ import javax.swing.JFrame;
  
 public class Snake extends JFrame implements KeyListener {
 	
-    //
     private int windowWidth = 800;
     private int windowHeight = 600;
     private ArrayList<Point> snake;
@@ -29,20 +27,19 @@ public class Snake extends JFrame implements KeyListener {
     	new Snake();
     } 
     
-    //handles the main window of the game and sets the start
+    // handles the main window of the game and sets the start
     public Snake() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(windowWidth, windowHeight);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setTitle("Snake Game By Team Auril");
+        this.setTitle("Ultimate Snake Game By Team Auril");
         this.setVisible(true);
-        this.createBufferStrategy(2);   
+        this.createBufferStrategy(2);
         this.addKeyListener(this);
-        //snakeIsAlive = true;
         
         snakePosition = randomPoint(15);
-        food = randomPoint(15);
+        food = randomPoint(15);        
         
         initGame();
         
@@ -69,8 +66,10 @@ public class Snake extends JFrame implements KeyListener {
         
         dx = 0;
         dy = 0;
-        //points = 0;
-        }
+//        if (snakeIsAlive) {
+//        	points = 0;
+//        }
+    }
     
     //main loop in the game - handles movement and new object placement
     private void gameLoop() {       
@@ -131,10 +130,7 @@ public class Snake extends JFrame implements KeyListener {
             
             // drawing	
             if (inMenu) {			
-				g.setColor(Color.red);
-	        	g.setFont(new Font("Tahoma", Font.PLAIN,15));
-	        	String enter = "Press enter to start the game";
-	        	g.drawString(enter, (windowWidth/3)-(enter.length()/2),windowHeight/2 );
+				drawMenu(g);
             }
             else {
         	   if (snakeIsAlive) {
@@ -221,7 +217,7 @@ public class Snake extends JFrame implements KeyListener {
     private void gameOver(Graphics g) {
         String gmOver = "GAME OVER!";
         String score = "Score: " + points;
-        String next = "Press any key to continue";
+        String next = "Press [enter] to continue";
         int gmOverFontSize = 70;
         int scoreFontSize = 40;
         g.setColor(Color.GREEN);
@@ -230,7 +226,6 @@ public class Snake extends JFrame implements KeyListener {
         g.setFont(new Font("Tahoma", Font.PLAIN, scoreFontSize)); 
         g.drawString(score, centralTxt(score, scoreFontSize, g), 300);
         g.drawString(next, centralTxt(next, scoreFontSize, g), 400);
-        //points = 0;
     }   
     
     private int centralTxt (String txt, int txtSize, Graphics g) {
@@ -240,15 +235,31 @@ public class Snake extends JFrame implements KeyListener {
     	return middle;
     }
     
+    private void drawMenu(Graphics g) {
+    	g.setColor(Color.red);
+    	int menuFontSize = 30;
+    	String enter = "Press [enter] to Start the Game";
+    	String game = "Ultimate Snake Game";
+    	String team = "By Team Auril";
+    	g.setFont(new Font("Tahoma", Font.PLAIN, 30));
+    	g.drawString(game, centralTxt(game, menuFontSize, g), 250);
+    	g.drawString(team, centralTxt(team, menuFontSize, g), 300);
+    	g.drawString(enter, centralTxt(enter, menuFontSize, g), 350);
+    }
     
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         
-        if (key != 0){
+        if (key == KeyEvent.VK_ENTER) {
+        	points = 0;
         	snakeIsAlive = true;
+        	inMenu = false;
         }
-        if (key == 37) {
+        else if (key == KeyEvent.VK_ESCAPE) {
+        	System.exit(0);
+        }
+        else if (key == 37) {
 	         dy = 0;
 	         if (dx != 1) dx = -1;
         } else if (key == 38) {
@@ -260,8 +271,6 @@ public class Snake extends JFrame implements KeyListener {
         } else if (key == 40) {
 	         dx = 0;
 	         if (dy != -1) dy = 1;
-        } else if (key == KeyEvent.VK_ENTER) {        	
-        	inMenu = false;
         }
     }   
     @Override
